@@ -7,7 +7,7 @@ const app = express();
 
 /* ✅ CORS CONFIG (FIXED) */
 app.use(cors({
-  origin: "https://lighthearted-kitten-b7bf1d.netlify.app",
+  origin: "https://agritechservice.netlify.app/",
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 }));
