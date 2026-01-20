@@ -4,136 +4,32 @@
 <meta charset="UTF-8">
 <title>AgriTech Service Request Portal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background:#f4f6f8;
-  margin:0;
-}
-
-header {
-  background:#2e7d32;
-  color:white;
-  padding:16px;
-  text-align:center;
-  font-size:22px;
-}
-
-.container {
-  max-width:1000px;
-  margin:20px auto;
-  padding:15px;
-}
-
-.card {
-  background:white;
-  padding:20px;
-  border-radius:8px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.1);
-  margin-bottom:20px;
-}
-
-h2 {
-  color:#2e7d32;
-  margin-top:0;
-}
-
-/* FORM */
-.grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-
-label {
-  font-weight:bold;
-  margin-bottom:5px;
-  display:block;
-}
-
-input, select {
-  width:100%;
-  padding:10px;
-  border-radius:5px;
-  border:1px solid #ccc;
-}
-
-button {
-  background:#2e7d32;
-  color:white;
-  border:none;
-  padding:12px;
-  border-radius:5px;
-  cursor:pointer;
-}
-
-button:hover {
-  background:#256428;
-}
-
-/* TABLE (DESKTOP) */
-table {
-  width:100%;
-  border-collapse:collapse;
-}
-
-th, td {
-  border:1px solid #ddd;
-  padding:10px;
-  text-align:center;
-}
-
-th {
-  background:#e8f5e9;
-}
-
-/* MOBILE CARDS */
-.mobile-list {
-  display:none;
-}
-
-.mobile-card {
-  border:1px solid #ddd;
-  border-radius:6px;
-  padding:12px;
-  margin-bottom:12px;
-  background:#fafafa;
-}
-
-.mobile-card div {
-  margin-bottom:6px;
-  font-size:14px;
-}
-
-/* RESPONSIVE */
+body { font-family: Arial, sans-serif; background:#f4f6f8; margin:0; }
+header { background:#2e7d32; color:white; padding:16px; text-align:center; font-size:22px; }
+.container { max-width:1000px; margin:20px auto; padding:15px; }
+.card { background:white; padding:20px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1); margin-bottom:20px; }
+h2 { color:#2e7d32; margin-top:0; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+label { font-weight:bold; margin-bottom:5px; display:block; }
+input, select { width:100%; padding:10px; border-radius:5px; border:1px solid #ccc; }
+button { background:#2e7d32; color:white; border:none; padding:12px; border-radius:5px; cursor:pointer; }
+button:hover { background:#256428; }
+table { width:100%; border-collapse:collapse; }
+th, td { border:1px solid #ddd; padding:10px; text-align:center; }
+th { background:#e8f5e9; }
+.mobile-list { display:none; }
+.mobile-card { border:1px solid #ddd; border-radius:6px; padding:12px; margin-bottom:12px; background:#fafafa; }
+.mobile-card div { margin-bottom:6px; font-size:14px; }
 @media (max-width: 768px) {
-  .grid {
-    grid-template-columns:1fr;
-  }
-
-  button {
-    width:100%;
-  }
-
-  table {
-    display:none;
-  }
-
-  .mobile-list {
-    display:block;
-  }
+  .grid { grid-template-columns:1fr; }
+  button { width:100%; }
+  table { display:none; }
+  .mobile-list { display:block; }
 }
-
-footer {
-  text-align:center;
-  font-size:13px;
-  color:#666;
-  padding:10px;
-}
+footer { text-align:center; font-size:13px; color:#666; padding:10px; }
 </style>
 </head>
-
 <body>
 
 <header>🌾 AgriTech Farmer Service Portal</header>
@@ -181,8 +77,6 @@ footer {
   <div class="card">
     <h2>Requests Dashboard</h2>
     <div id="summary"></div>
-
-    <!-- Desktop Table -->
     <table>
       <thead>
         <tr>
@@ -196,8 +90,6 @@ footer {
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
-
-    <!-- Mobile Cards -->
     <div class="mobile-list" id="mobileList"></div>
   </div>
 
@@ -208,38 +100,51 @@ footer {
 <script>
 const API = "https://agritech-backend-0f49.onrender.com/api";
 
+// Submit form
 document.getElementById("form").onsubmit = async (e) => {
   e.preventDefault();
 
-  await fetch(API + "/request", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      farmerName:name.value,
-      service:service.value,
-      priority:priority.value,
-      location:location.value
-    })
+  const payload = {
+    name: document.getElementById("name").value,   // backend expects "name"
+    service: document.getElementById("service").value,
+    priority: document.getElementById("priority").value,
+    location: document.getElementById("location").value,
+    status: "Pending"   // backend likely requires a default status
+  };
+
+  const res = await fetch(API + "/requests", {     // use plural endpoint
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
   });
+
+  if (!res.ok) {
+    const err = await res.text();
+    alert("Error submitting request: " + err);
+    return;
+  }
 
   e.target.reset();
   loadRequests();
 };
 
-async function loadRequests(){
+// Load requests
+async function loadRequests() {
   const res = await fetch(API + "/requests");
   const data = await res.json();
 
-  summary.innerText =
-    `Total Requests: ${data.length} | Pending: ${data.filter(r=>r.status==="Pending").length}`;
+  document.getElementById("summary").innerText =
+    `Total Requests: ${data.length} | Pending: ${data.filter(r => r.status === "Pending").length}`;
 
+  const tableBody = document.getElementById("tableBody");
+  const mobileList = document.getElementById("mobileList");
   tableBody.innerHTML = "";
   mobileList.innerHTML = "";
 
-  data.forEach(r=>{
+  data.forEach(r => {
     tableBody.innerHTML += `
       <tr>
-        <td>${r.farmerName}</td>
+        <td>${r.name}</td>
         <td>${r.service}</td>
         <td>${r.priority}</td>
         <td>${r.location}</td>
@@ -249,7 +154,7 @@ async function loadRequests(){
 
     mobileList.innerHTML += `
       <div class="mobile-card">
-        <div><b>Farmer:</b> ${r.farmerName}</div>
+        <div><b>Farmer:</b> ${r.name}</div>
         <div><b>Service:</b> ${r.service}</div>
         <div><b>Priority:</b> ${r.priority}</div>
         <div><b>Location:</b> ${r.location}</div>
