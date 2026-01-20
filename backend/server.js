@@ -5,12 +5,17 @@ const path = require("path");
 
 const app = express();
 
-/* ✅ CORS CONFIG (FIXED) */
 app.use(cors({
-  origin: "https://agritechservice.netlify.app/",
+  origin: [
+    "https://agritechservice.netlify.app",
+    "https://lighthearted-kitten-b7bf1d.netlify.app"
+  ],
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 }));
+
+
+
 
 app.use(express.json());
 
