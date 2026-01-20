@@ -6,12 +6,18 @@ const path = require("path");
 const app = express();
 
 app.use(cors({
-  origin: [
-    "https://agritech-service-portal.vercel.app"
-  ],
+  origin: (origin, callback) => {
+    if (!origin || origin.includes("vercel.app")) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 }));
+
+
 
 // 🔥 IMPORTANT FIX
 app.options("*", cors());
