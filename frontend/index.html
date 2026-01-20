@@ -61,8 +61,14 @@ button {
 button:hover {
   background:#256428;
 }
+
+/* ✅ MOBILE TABLE FIX */
+.table-container {
+  overflow-x: auto;
+}
 table {
   width:100%;
+  min-width:600px;
   border-collapse:collapse;
   margin-top:15px;
 }
@@ -74,6 +80,7 @@ th, td {
 th {
   background:#e8f5e9;
 }
+
 .summary {
   font-weight:bold;
   margin-bottom:10px;
@@ -141,19 +148,23 @@ footer {
     <h2>Requests Dashboard</h2>
     <div class="summary" id="summary">Loading...</div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Farmer</th>
-          <th>Service</th>
-          <th>Priority</th>
-          <th>Location</th>
-          <th>Status</th>
-          <th>Requested At</th>
-        </tr>
-      </thead>
-      <tbody id="list"></tbody>
-    </table>
+    <!-- ✅ TABLE WRAPPED FOR MOBILE -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Farmer</th>
+            <th>Service</th>
+            <th>Priority</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Requested At</th>
+          </tr>
+        </thead>
+        <tbody id="list"></tbody>
+      </table>
+    </div>
+
   </div>
 
 </div>
@@ -161,14 +172,14 @@ footer {
 <footer>© 2026 AgriTech Mini Project</footer>
 
 <script>
-/* 🔗 BACKEND API URL (Railway) */
+/* 🔗 BACKEND API URL */
 const API = "https://agritech-backend-0f49.onrender.com/api";
 
 /* Submit form */
 document.getElementById("form").onsubmit = async (e) => {
   e.preventDefault();
 
-  await fetch(API + "/request", {   // ✅ CORRECT POST ROUTE
+  await fetch(API + "/request", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -185,7 +196,7 @@ document.getElementById("form").onsubmit = async (e) => {
 
 /* Load dashboard */
 async function loadRequests() {
-  const res = await fetch(API + "/requests"); // ✅ CORRECT GET ROUTE
+  const res = await fetch(API + "/requests");
   const data = await res.json();
 
   document.getElementById("summary").innerText =
@@ -203,7 +214,6 @@ async function loadRequests() {
   `).join("");
 }
 
-/* Load on page open */
 loadRequests();
 </script>
 
