@@ -1,135 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>AgriTech Service Request Portal</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
-  background:#f4f6f8;
-  margin:0;
+  background: #f4f6f8;
+  margin: 0;
 }
 
 header {
-  background:#2e7d32;
-  color:white;
-  padding:16px;
-  text-align:center;
-  font-size:22px;
+  background: #2e7d32;
+  color: white;
+  padding: 16px;
+  text-align: center;
+  font-size: 22px;
 }
 
 .container {
-  max-width:1000px;
-  margin:20px auto;
-  padding:15px;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 16px;
 }
 
 .card {
-  background:white;
-  padding:20px;
-  border-radius:8px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.1);
-  margin-bottom:20px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 24px;
 }
 
 h2 {
-  color:#2e7d32;
-  margin-top:0;
+  color: #2e7d32;
+  margin-top: 0;
 }
 
-/* FORM */
+/* ===== FORM ===== */
 .grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
 }
 
 label {
-  font-weight:bold;
-  margin-bottom:5px;
-  display:block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  display: block;
 }
 
 input, select {
-  width:100%;
-  padding:10px;
-  border-radius:5px;
-  border:1px solid #ccc;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 15px;
 }
 
 button {
-  background:#2e7d32;
-  color:white;
-  border:none;
-  padding:12px;
-  border-radius:5px;
-  cursor:pointer;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 button:hover {
-  background:#256428;
+  background: #256428;
 }
 
-/* TABLE (DESKTOP) */
+/* ===== TABLE ===== */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
 table {
-  width:100%;
-  border-collapse:collapse;
+  width: 100%;
+  min-width: 650px;
+  border-collapse: collapse;
 }
 
 th, td {
-  border:1px solid #ddd;
-  padding:10px;
-  text-align:center;
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  white-space: nowrap;
 }
 
 th {
-  background:#e8f5e9;
+  background: #e8f5e9;
 }
 
-/* MOBILE CARDS */
-.mobile-list {
-  display:none;
+.summary {
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
-.mobile-card {
-  border:1px solid #ddd;
-  border-radius:6px;
-  padding:12px;
-  margin-bottom:12px;
-  background:#fafafa;
-}
-
-.mobile-card div {
-  margin-bottom:6px;
-  font-size:14px;
-}
-
-/* RESPONSIVE */
+/* ===== MOBILE ===== */
 @media (max-width: 768px) {
   .grid {
-    grid-template-columns:1fr;
+    grid-template-columns: 1fr;
   }
 
   button {
-    width:100%;
+    width: 100%;
   }
 
-  table {
-    display:none;
-  }
-
-  .mobile-list {
-    display:block;
+  th, td {
+    font-size: 14px;
+    padding: 8px;
   }
 }
 
 footer {
-  text-align:center;
-  font-size:13px;
-  color:#666;
-  padding:10px;
+  text-align: center;
+  padding: 12px;
+  font-size: 13px;
+  color: #666;
 }
 </style>
 </head>
@@ -143,62 +140,67 @@ footer {
   <!-- FORM -->
   <div class="card">
     <h2>Submit Service Request</h2>
+
     <form id="form" class="grid">
+
       <div>
         <label>Farmer Name</label>
-        <input id="name" required>
+        <input id="farmerName" placeholder="Enter farmer name" required />
       </div>
+
       <div>
         <label>Service</label>
         <select id="service" required>
-          <option value="">Select</option>
-          <option>Labour</option>
-          <option>Tractor</option>
-          <option>Pest Control</option>
-          <option>Irrigation Repair</option>
-          <option>Harvesting</option>
+          <option value="" disabled selected>Select service</option>
+          <option value="Labour">Labour</option>
+          <option value="Tractor">Tractor</option>
+          <option value="Pest Control">Pest Control</option>
+          <option value="Irrigation Repair">Irrigation Repair</option>
+          <option value="Harvesting">Harvesting</option>
         </select>
       </div>
+
       <div>
         <label>Priority</label>
-        <select id="priority">
-          <option>Low</option>
-          <option selected>Medium</option>
-          <option>High</option>
+        <select id="priority" required>
+          <option value="Low">Low</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="High">High</option>
         </select>
       </div>
+
       <div>
         <label>Location</label>
-        <input id="location" required>
+        <input id="location" placeholder="Village / City" required />
       </div>
+
       <div>
         <button type="submit">Submit Request</button>
       </div>
+
     </form>
   </div>
 
   <!-- DASHBOARD -->
   <div class="card">
     <h2>Requests Dashboard</h2>
-    <div id="summary"></div>
+    <div class="summary" id="summary">Loading...</div>
 
-    <!-- Desktop Table -->
-    <table>
-      <thead>
-        <tr>
-          <th>Farmer</th>
-          <th>Service</th>
-          <th>Priority</th>
-          <th>Location</th>
-          <th>Status</th>
-          <th>Requested At</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-
-    <!-- Mobile Cards -->
-    <div class="mobile-list" id="mobileList"></div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Farmer</th>
+            <th>Service</th>
+            <th>Priority</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Requested At</th>
+          </tr>
+        </thead>
+        <tbody id="list"></tbody>
+      </table>
+    </div>
   </div>
 
 </div>
@@ -208,54 +210,57 @@ footer {
 <script>
 const API = "https://agritech-backend-0f49.onrender.com/api";
 
-document.getElementById("form").onsubmit = async (e) => {
+const form = document.getElementById("form");
+const list = document.getElementById("list");
+const summary = document.getElementById("summary");
+
+form.onsubmit = async (e) => {
   e.preventDefault();
 
-  await fetch(API + "/request", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      farmerName:name.value,
-      service:service.value,
-      priority:priority.value,
-      location:location.value
-    })
+  const data = {
+    farmerName: farmerName.value.trim(),
+    service: service.value,
+    priority: priority.value,
+    location: location.value.trim()
+  };
+
+  if (!data.farmerName || !data.service || !data.priority || !data.location) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  const res = await fetch(API + "/request", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
   });
 
-  e.target.reset();
+  if (!res.ok) {
+    alert("Failed to submit request");
+    return;
+  }
+
+  form.reset();
   loadRequests();
 };
 
-async function loadRequests(){
+async function loadRequests() {
   const res = await fetch(API + "/requests");
   const data = await res.json();
 
   summary.innerText =
-    `Total Requests: ${data.length} | Pending: ${data.filter(r=>r.status==="Pending").length}`;
+    `Total Requests: ${data.length} | Pending: ${data.filter(r => r.status === "Pending").length}`;
 
-  tableBody.innerHTML = "";
-  mobileList.innerHTML = "";
-
-  data.forEach(r=>{
-    tableBody.innerHTML += `
-      <tr>
-        <td>${r.farmerName}</td>
-        <td>${r.service}</td>
-        <td>${r.priority}</td>
-        <td>${r.location}</td>
-        <td>${r.status}</td>
-        <td>${new Date(r.createdAt).toLocaleString()}</td>
-      </tr>`;
-
-    mobileList.innerHTML += `
-      <div class="mobile-card">
-        <div><b>Farmer:</b> ${r.farmerName}</div>
-        <div><b>Service:</b> ${r.service}</div>
-        <div><b>Priority:</b> ${r.priority}</div>
-        <div><b>Location:</b> ${r.location}</div>
-        <div><b>Status:</b> ${r.status}</div>
-      </div>`;
-  });
+  list.innerHTML = data.map(r => `
+    <tr>
+      <td>${r.farmerName}</td>
+      <td>${r.service}</td>
+      <td>${r.priority}</td>
+      <td>${r.location}</td>
+      <td>${r.status}</td>
+      <td>${new Date(r.createdAt).toLocaleString()}</td>
+    </tr>
+  `).join("");
 }
 
 loadRequests();
