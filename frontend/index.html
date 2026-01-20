@@ -11,6 +11,7 @@ body {
   background:#f4f6f8;
   margin:0;
 }
+
 header {
   background:#2e7d32;
   color:white;
@@ -18,11 +19,13 @@ header {
   text-align:center;
   font-size:22px;
 }
+
 .container {
   max-width:1000px;
   margin:30px auto;
   padding:20px;
 }
+
 .card {
   background:white;
   padding:20px;
@@ -30,26 +33,31 @@ header {
   box-shadow:0 2px 10px rgba(0,0,0,0.1);
   margin-bottom:25px;
 }
+
 h2 {
   color:#2e7d32;
   margin-top:0;
 }
+
 .grid {
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:15px;
 }
+
 label {
   font-weight:bold;
   display:block;
   margin-bottom:5px;
 }
+
 input, select {
   width:100%;
   padding:10px;
   border-radius:5px;
   border:1px solid #ccc;
 }
+
 button {
   background:#2e7d32;
   color:white;
@@ -58,33 +66,49 @@ button {
   border-radius:5px;
   cursor:pointer;
 }
+
 button:hover {
   background:#256428;
 }
 
-/* ✅ MOBILE TABLE FIX */
+/* ===== TABLE & MOBILE FIX ===== */
+
 .table-container {
-  overflow-x: auto;
+  width:100%;
+  overflow-x:auto;
 }
+
 table {
   width:100%;
-  min-width:600px;
+  min-width:650px;
   border-collapse:collapse;
-  margin-top:15px;
+  table-layout:fixed; /* 🔥 key alignment fix */
 }
+
 th, td {
   border:1px solid #ddd;
   padding:10px;
   text-align:center;
+  white-space:nowrap; /* 🔥 prevents breaking */
 }
+
 th {
   background:#e8f5e9;
+  font-weight:bold;
+}
+
+@media (max-width: 768px) {
+  th, td {
+    padding:8px 6px;
+    font-size:14px;
+  }
 }
 
 .summary {
   font-weight:bold;
   margin-bottom:10px;
 }
+
 footer {
   text-align:center;
   padding:12px;
@@ -103,6 +127,7 @@ footer {
   <!-- FORM -->
   <div class="card">
     <h2>Submit Service Request</h2>
+
     <form id="form" class="grid">
 
       <div>
@@ -148,7 +173,6 @@ footer {
     <h2>Requests Dashboard</h2>
     <div class="summary" id="summary">Loading...</div>
 
-    <!-- ✅ TABLE WRAPPED FOR MOBILE -->
     <div class="table-container">
       <table>
         <thead>
@@ -164,7 +188,6 @@ footer {
         <tbody id="list"></tbody>
       </table>
     </div>
-
   </div>
 
 </div>
@@ -172,10 +195,8 @@ footer {
 <footer>© 2026 AgriTech Mini Project</footer>
 
 <script>
-/* 🔗 BACKEND API URL */
 const API = "https://agritech-backend-0f49.onrender.com/api";
 
-/* Submit form */
 document.getElementById("form").onsubmit = async (e) => {
   e.preventDefault();
 
@@ -194,7 +215,6 @@ document.getElementById("form").onsubmit = async (e) => {
   loadRequests();
 };
 
-/* Load dashboard */
 async function loadRequests() {
   const res = await fetch(API + "/requests");
   const data = await res.json();
