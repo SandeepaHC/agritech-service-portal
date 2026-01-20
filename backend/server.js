@@ -7,7 +7,7 @@ const app = express();
 
 app.use(cors({
   origin: [
-    "https://agritechservice.netlify.app",
+    "https://agritech-service-portal.vercel.app",
     "https://lighthearted-kitten-b7bf1d.netlify.app"
   ],
   methods: ["GET", "POST", "OPTIONS"],
