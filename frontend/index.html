@@ -22,8 +22,8 @@ header {
 
 .container {
   max-width:1000px;
-  margin:30px auto;
-  padding:20px;
+  margin:20px auto;
+  padding:15px;
 }
 
 .card {
@@ -31,7 +31,7 @@ header {
   padding:20px;
   border-radius:8px;
   box-shadow:0 2px 10px rgba(0,0,0,0.1);
-  margin-bottom:25px;
+  margin-bottom:20px;
 }
 
 h2 {
@@ -39,6 +39,7 @@ h2 {
   margin-top:0;
 }
 
+/* FORM */
 .grid {
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -47,8 +48,8 @@ h2 {
 
 label {
   font-weight:bold;
-  display:block;
   margin-bottom:5px;
+  display:block;
 }
 
 input, select {
@@ -71,77 +72,64 @@ button:hover {
   background:#256428;
 }
 
-/* ===== TABLE ===== */
-.table-container {
-  width:100%;
-  overflow-x:auto;
-}
-
+/* TABLE (DESKTOP) */
 table {
   width:100%;
-  min-width:650px;
   border-collapse:collapse;
-  table-layout:fixed;
 }
 
 th, td {
   border:1px solid #ddd;
   padding:10px;
   text-align:center;
-  white-space:nowrap;
 }
 
 th {
   background:#e8f5e9;
-  font-weight:bold;
 }
 
-.summary {
-  font-weight:bold;
-  margin-bottom:10px;
+/* MOBILE CARDS */
+.mobile-list {
+  display:none;
 }
 
-footer {
-  text-align:center;
+.mobile-card {
+  border:1px solid #ddd;
+  border-radius:6px;
   padding:12px;
-  font-size:13px;
-  color:#666;
+  margin-bottom:12px;
+  background:#fafafa;
 }
 
-/* ===== MOBILE OPTIMIZATION ===== */
+.mobile-card div {
+  margin-bottom:6px;
+  font-size:14px;
+}
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
-
-  .container {
-    padding:12px;
-    margin:15px auto;
-  }
-
   .grid {
     grid-template-columns:1fr;
-  }
-
-  .card {
-    padding:16px;
   }
 
   button {
     width:100%;
   }
 
-  th, td {
-    padding:8px 6px;
-    font-size:14px;
+  table {
+    display:none;
+  }
+
+  .mobile-list {
+    display:block;
   }
 }
 
-/* ✅ HIDE LESS IMPORTANT COLUMNS ON MOBILE */
-@media (max-width: 600px) {
-  th:nth-child(5),
-  th:nth-child(6),
-  td:nth-child(5),
-  td:nth-child(6) {
-    display:none;
-  }
+footer {
+  text-align:center;
+  font-size:13px;
+  color:#666;
+  padding:10px;
 }
 </style>
 </head>
@@ -155,14 +143,11 @@ footer {
   <!-- FORM -->
   <div class="card">
     <h2>Submit Service Request</h2>
-
     <form id="form" class="grid">
-
       <div>
         <label>Farmer Name</label>
-        <input id="name" placeholder="Enter farmer name" required>
+        <input id="name" required>
       </div>
-
       <div>
         <label>Service</label>
         <select id="service" required>
@@ -174,48 +159,46 @@ footer {
           <option>Harvesting</option>
         </select>
       </div>
-
       <div>
         <label>Priority</label>
-        <select id="priority" required>
+        <select id="priority">
           <option>Low</option>
           <option selected>Medium</option>
           <option>High</option>
         </select>
       </div>
-
       <div>
         <label>Location</label>
-        <input id="location" placeholder="Village / City" required>
+        <input id="location" required>
       </div>
-
       <div>
         <button type="submit">Submit Request</button>
       </div>
-
     </form>
   </div>
 
   <!-- DASHBOARD -->
   <div class="card">
     <h2>Requests Dashboard</h2>
-    <div class="summary" id="summary">Loading...</div>
+    <div id="summary"></div>
 
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Farmer</th>
-            <th>Service</th>
-            <th>Priority</th>
-            <th>Location</th>
-            <th>Status</th>
-            <th>Requested At</th>
-          </tr>
-        </thead>
-        <tbody id="list"></tbody>
-      </table>
-    </div>
+    <!-- Desktop Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Farmer</th>
+          <th>Service</th>
+          <th>Priority</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Requested At</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+
+    <!-- Mobile Cards -->
+    <div class="mobile-list" id="mobileList"></div>
   </div>
 
 </div>
@@ -229,13 +212,13 @@ document.getElementById("form").onsubmit = async (e) => {
   e.preventDefault();
 
   await fetch(API + "/request", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      farmerName: document.getElementById("name").value,
-      service: document.getElementById("service").value,
-      priority: document.getElementById("priority").value,
-      location: document.getElementById("location").value
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      farmerName:name.value,
+      service:service.value,
+      priority:priority.value,
+      location:location.value
     })
   });
 
@@ -243,23 +226,36 @@ document.getElementById("form").onsubmit = async (e) => {
   loadRequests();
 };
 
-async function loadRequests() {
+async function loadRequests(){
   const res = await fetch(API + "/requests");
   const data = await res.json();
 
-  document.getElementById("summary").innerText =
-    `Total Requests: ${data.length} | Pending: ${data.filter(r => r.status === "Pending").length}`;
+  summary.innerText =
+    `Total Requests: ${data.length} | Pending: ${data.filter(r=>r.status==="Pending").length}`;
 
-  document.getElementById("list").innerHTML = data.map(r => `
-    <tr>
-      <td>${r.farmerName}</td>
-      <td>${r.service}</td>
-      <td>${r.priority}</td>
-      <td>${r.location}</td>
-      <td>${r.status}</td>
-      <td>${new Date(r.createdAt).toLocaleString()}</td>
-    </tr>
-  `).join("");
+  tableBody.innerHTML = "";
+  mobileList.innerHTML = "";
+
+  data.forEach(r=>{
+    tableBody.innerHTML += `
+      <tr>
+        <td>${r.farmerName}</td>
+        <td>${r.service}</td>
+        <td>${r.priority}</td>
+        <td>${r.location}</td>
+        <td>${r.status}</td>
+        <td>${new Date(r.createdAt).toLocaleString()}</td>
+      </tr>`;
+
+    mobileList.innerHTML += `
+      <div class="mobile-card">
+        <div><b>Farmer:</b> ${r.farmerName}</div>
+        <div><b>Service:</b> ${r.service}</div>
+        <div><b>Priority:</b> ${r.priority}</div>
+        <div><b>Location:</b> ${r.location}</div>
+        <div><b>Status:</b> ${r.status}</div>
+      </div>`;
+  });
 }
 
 loadRequests();
