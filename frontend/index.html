@@ -161,13 +161,14 @@ footer {
 <footer>© 2026 AgriTech Mini Project</footer>
 
 <script>
-const API = "https://agritech-service-portal-production.up.railway.app/api";
+/* 🔗 BACKEND API URL (Railway) */
+const API = "http://localhost:3000/api";
 
-// Submit form
+/* Submit form */
 document.getElementById("form").onsubmit = async (e) => {
   e.preventDefault();
 
-  await fetch(API + "/requests", {
+  await fetch(API + "/request", {   // ✅ CORRECT POST ROUTE
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -182,9 +183,9 @@ document.getElementById("form").onsubmit = async (e) => {
   loadRequests();
 };
 
-// Load dashboard
+/* Load dashboard */
 async function loadRequests() {
-  const res = await fetch(API + "/requests");
+  const res = await fetch(API + "/requests"); // ✅ CORRECT GET ROUTE
   const data = await res.json();
 
   document.getElementById("summary").innerText =
@@ -202,6 +203,7 @@ async function loadRequests() {
   `).join("");
 }
 
+/* Load on page open */
 loadRequests();
 </script>
 

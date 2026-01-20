@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 const DATA_FILE = path.join(__dirname, "requests.json");
@@ -16,7 +16,12 @@ if (!fs.existsSync(DATA_FILE)) {
 
 /* Helper functions */
 function readData() {
-  return JSON.parse(fs.readFileSync(DATA_FILE));
+  try {
+    return JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
+  } catch (error) {
+    console.error("Error reading file:", error);
+    return [];
+  }
 }
 
 function writeData(data) {
@@ -40,7 +45,7 @@ app.post("/api/request", (req, res) => {
     priority,
     location,
     status: "Pending",
-    createdAt: new Date().toLocaleString()
+    createdAt: new Date().toISOString()   // ✅ FIXED
   });
 
   writeData(data);
@@ -59,6 +64,7 @@ app.get("/", (req, res) => {
 
 /* Start server */
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log("Server running on port", PORT);
+  console.log(`Server running on port ${PORT}`);
 });
