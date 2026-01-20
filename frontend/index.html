@@ -71,7 +71,7 @@ button:hover {
   background:#256428;
 }
 
-/* ===== TABLE & MOBILE FIX ===== */
+/* ===== TABLE FIX ===== */
 
 .table-container {
   width:100%;
@@ -82,26 +82,19 @@ table {
   width:100%;
   min-width:650px;
   border-collapse:collapse;
-  table-layout:fixed; /* 🔥 key alignment fix */
+  table-layout:fixed;
 }
 
 th, td {
   border:1px solid #ddd;
   padding:10px;
   text-align:center;
-  white-space:nowrap; /* 🔥 prevents breaking */
+  white-space:nowrap;
 }
 
 th {
   background:#e8f5e9;
   font-weight:bold;
-}
-
-@media (max-width: 768px) {
-  th, td {
-    padding:8px 6px;
-    font-size:14px;
-  }
 }
 
 .summary {
@@ -114,6 +107,32 @@ footer {
   padding:12px;
   font-size:13px;
   color:#666;
+}
+
+/* ===== MOBILE FIX (IMPORTANT) ===== */
+@media (max-width: 768px) {
+
+  .container {
+    padding:12px;
+    margin:15px auto;
+  }
+
+  .grid {
+    grid-template-columns:1fr; /* 🔥 single column form */
+  }
+
+  .card {
+    padding:16px;
+  }
+
+  button {
+    width:100%; /* full width button */
+  }
+
+  th, td {
+    padding:8px 6px;
+    font-size:14px;
+  }
 }
 </style>
 </head>
@@ -161,7 +180,7 @@ footer {
         <input id="location" placeholder="Village / City" required>
       </div>
 
-      <div style="grid-column:1/3;">
+      <div>
         <button type="submit">Submit Request</button>
       </div>
 
