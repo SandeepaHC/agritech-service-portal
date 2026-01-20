@@ -8,11 +8,14 @@ const app = express();
 /* ✅ CORS FIX FOR VERCEL */
 app.use(cors({
   origin: [
-    "https://agritech-service-portal.vercel.app"
+    "https://agritech-service-portal.vercel.app",
+    "https://agritech-service-portal-5gfa.vercel.app",
+    "https://agritech-service-portal-40nyizdee-sandeepahcs-projects.vercel.app"
   ],
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 }));
+
 
 app.options("*", cors());
 app.use(express.json());
