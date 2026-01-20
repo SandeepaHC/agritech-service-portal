@@ -62,7 +62,7 @@ button {
   background:#2e7d32;
   color:white;
   border:none;
-  padding:12px 18px;
+  padding:12px;
   border-radius:5px;
   cursor:pointer;
 }
@@ -71,8 +71,7 @@ button:hover {
   background:#256428;
 }
 
-/* ===== TABLE FIX ===== */
-
+/* ===== TABLE ===== */
 .table-container {
   width:100%;
   overflow-x:auto;
@@ -109,7 +108,7 @@ footer {
   color:#666;
 }
 
-/* ===== MOBILE FIX (IMPORTANT) ===== */
+/* ===== MOBILE OPTIMIZATION ===== */
 @media (max-width: 768px) {
 
   .container {
@@ -118,7 +117,7 @@ footer {
   }
 
   .grid {
-    grid-template-columns:1fr; /* 🔥 single column form */
+    grid-template-columns:1fr;
   }
 
   .card {
@@ -126,12 +125,22 @@ footer {
   }
 
   button {
-    width:100%; /* full width button */
+    width:100%;
   }
 
   th, td {
     padding:8px 6px;
     font-size:14px;
+  }
+}
+
+/* ✅ HIDE LESS IMPORTANT COLUMNS ON MOBILE */
+@media (max-width: 600px) {
+  th:nth-child(5),
+  th:nth-child(6),
+  td:nth-child(5),
+  td:nth-child(6) {
+    display:none;
   }
 }
 </style>
