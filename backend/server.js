@@ -4,7 +4,14 @@ const fs = require("fs");
 const path = require("path");
 
 const app = express();
-app.use(cors({ origin: "*" }));
+
+/* ✅ CORS CONFIG (FIXED) */
+app.use(cors({
+  origin: "https://lighthearted-kitten-b7bf1d.netlify.app",
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"]
+}));
+
 app.use(express.json());
 
 const DATA_FILE = path.join(__dirname, "requests.json");
@@ -45,7 +52,7 @@ app.post("/api/request", (req, res) => {
     priority,
     location,
     status: "Pending",
-    createdAt: new Date().toISOString()   // ✅ FIXED
+    createdAt: new Date().toISOString()
   });
 
   writeData(data);
